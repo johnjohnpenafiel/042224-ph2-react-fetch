@@ -1,4 +1,24 @@
-function MemeCard({ meme }) {
+function MemeCard({ meme, updateMeme, deleteMeme }) {
+
+    const URL = "http://localhost:3000/memes"
+
+    function handleIncrementsLikes (){
+        fetch(`${URL}/${meme.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Accept' : 'application/json'},
+            body: JSON.stringify({ likes: meme.likes + 1})
+        })
+        .then(res => res.json())
+        .then(updatedMeme => updateMeme(updatedMeme))
+
+    }
+
+    function handleDelete(){
+        fetch(`${URL}/${meme.id}`, {
+            method: 'DELETE'              
+        })
+        .then(() => deleteMeme(meme.id))
+    }
 
     return (
         <div className="card">
@@ -7,9 +27,9 @@ function MemeCard({ meme }) {
 
             <p>{meme.caption}</p>
 
-            <button>{meme.likes} Likes</button>
+            <button onClick={handleIncrementsLikes}>{meme.likes} Likes</button>
 
-            <button>DELETE</button>
+            <button onClick={ handleDelete }>DELETE</button>
 
         </div>
     )
